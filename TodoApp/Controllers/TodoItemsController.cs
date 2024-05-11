@@ -61,4 +61,19 @@ public class TodoItemsController : ControllerBase
         
         return Ok();
     }
+
+    [HttpDelete]
+    public IActionResult DeleteTodoItem(int id)
+    {
+        var itemToDelete = _dbContext.TodoItems.Find(id);
+        if (itemToDelete == null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.TodoItems.Remove(itemToDelete);
+        _dbContext.SaveChanges();
+
+        return Ok();
+    }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TodoApp.Models;
 
 namespace TodoApp;
 
@@ -54,9 +55,9 @@ public class PlayGround
 
        var nameOfRichestStudent = data.MaxBy(x => x.Income)?.Name;
 
-       var isExist = data.Any(x => x.Name.StartsWith("c"));
+       var isExist = data.Any(x => x.Name.StartsWith("c")); //returns true or false
        
-       var e = data.All(x => x.Income>1000);
+       var e = data.All(x => x.Income>1000); //returns true or false
 
        var f = data.Select(s => s.LastName).Distinct(); // List<string>
        
