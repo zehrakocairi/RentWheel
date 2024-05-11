@@ -63,9 +63,9 @@ public class TodoItemsController : ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult DeleteTodoItem(int id)
+    public IActionResult DeleteTodoItem(long id)
     {
-        var itemToDelete = _dbContext.TodoItems.Find(id);
+        var itemToDelete = _dbContext.TodoItems.Where(x=> x.Id == id).FirstOrDefault();
         if (itemToDelete == null)
         {
             return NotFound();

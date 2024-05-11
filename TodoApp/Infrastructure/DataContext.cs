@@ -10,4 +10,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<TodoItem> TodoItems { get; set; } = null!;
+    
+    public DbSet<Product> Products { get; set; } = null!;
 }
