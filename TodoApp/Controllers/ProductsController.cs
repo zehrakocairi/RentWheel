@@ -9,7 +9,7 @@ namespace TodoApp.Controllers;
 
 public class ProductsController:ControllerBase
 {
-    private readonly ILogger<TodoItemsController> _logger;
+    private readonly ILogger<ProductsController> _logger;
     private readonly DataContext _dbContext;
 
     public ProductsController(ILogger<ProductsController> logger, DataContext dbContext)
@@ -21,7 +21,7 @@ public class ProductsController:ControllerBase
     [HttpGet]
     public IActionResult GetAll()
     {
-        var allProducts= _dbContext.Products.ToList()
+        var allProducts = _dbContext.Products.ToList();
         return Ok(allProducts);
     }
 
@@ -70,7 +70,7 @@ public class ProductsController:ControllerBase
            return NotFound();
         }
 
-        _dbContext.Products.Remove();
+        _dbContext.Products.Remove(productToDelete);
         _dbContext.SaveChanges();
 
         return Ok();

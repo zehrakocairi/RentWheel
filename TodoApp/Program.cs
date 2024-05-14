@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Infrastructure;
+using TodoApp.Services;
 
 namespace TodoApp;
 
@@ -11,6 +12,8 @@ public class Program
 
         // Add services to the container.
 
+        builder.Services.AddTransient<ITodoItemService, TodoItemService>();
+        
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

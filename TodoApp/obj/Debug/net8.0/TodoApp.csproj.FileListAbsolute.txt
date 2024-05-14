@@ -33,3 +33,4 @@
 /Users/zehra/RiderProjects/TodoApp/TodoApp/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
 /Users/zehra/RiderProjects/TodoApp/TodoApp/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
 /Users/zehra/RiderProjects/TodoApp/TodoApp/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll
+/Users/zehra/RiderProjects/TodoApp/TodoApp/obj/Debug/net8.0/TodoApp.sourcelink.json

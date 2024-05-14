@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
+using TodoApp.Services;
 
 namespace TodoApp.Controllers;
 
@@ -12,17 +13,19 @@ public class TodoItemsController : ControllerBase
 
     private readonly ILogger<TodoItemsController> _logger;
     private readonly DataContext _dbContext;
+    private readonly ITodoItemService _todoItemService;
 
-    public TodoItemsController(ILogger<TodoItemsController> logger, DataContext dbContext)
+    public TodoItemsController(ILogger<TodoItemsController> logger, DataContext dbContext, ITodoItemService todoItemService)
     {
         _logger = logger;
         _dbContext = dbContext;
+        _todoItemService = todoItemService;
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        var allItems = _dbContext.TodoItems.ToList();
+        var allItems = _todoItemService.GetItems();
         return Ok(allItems);
     }
     
@@ -34,30 +37,19 @@ public class TodoItemsController : ControllerBase
             return BadRequest();
         }
 
-        _dbContext.TodoItems.Add(item);
-        
-        _dbContext.SaveChanges();
+        _todoItemService.Create(item);
         return Ok();
     }
     
     [HttpPut]
     public IActionResult UpdateTodoItem(TodoItem item)
     {
-        if (item == null || item.Id == null)
+        if (item == null || item.Id < 1)
         {
             return BadRequest();
         }
 
-        var currentItem = _dbContext.TodoItems.Where(x => x.Id == item.Id).FirstOrDefault();
-        if (currentItem == null)
-        {
-            return BadRequest($"There is no record with that Id : {item.Id}");
-        }
-
-        currentItem.Name = item.Name;
-        currentItem.IsComplete = item.IsComplete;
-        
-        _dbContext.SaveChanges();
+        _todoItemService.Update(item);
         
         return Ok();
     }
@@ -65,14 +57,12 @@ public class TodoItemsController : ControllerBase
     [HttpDelete]
     public IActionResult DeleteTodoItem(long id)
     {
-        var itemToDelete = _dbContext.TodoItems.Where(x=> x.Id == id).FirstOrDefault();
-        if (itemToDelete == null)
+        if (id < 1)
         {
-            return NotFound();
+            return BadRequest();
         }
-
-        _dbContext.TodoItems.Remove(itemToDelete);
-        _dbContext.SaveChanges();
+        
+        _todoItemService.Delete(id);
 
         return Ok();
     }
