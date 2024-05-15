@@ -10,13 +10,11 @@ namespace TodoApp.Controllers;
 public class TodoItemsController : ControllerBase
 {
     private readonly ILogger<TodoItemsController> _logger;
-    private readonly DataContext _dbContext;
     private readonly ITodoItemService _todoItemService;
 
-    public TodoItemsController(ILogger<TodoItemsController> logger, DataContext dbContext, ITodoItemService todoItemService)
+    public TodoItemsController(ILogger<TodoItemsController> logger, ITodoItemService todoItemService)
     {
         _logger = logger;
-        _dbContext = dbContext;
         _todoItemService = todoItemService;
     }
 

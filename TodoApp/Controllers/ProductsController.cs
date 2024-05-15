@@ -11,13 +11,11 @@ namespace TodoApp.Controllers;
 public class ProductsController:ControllerBase
 {
     private readonly ILogger<ProductsController> _logger;
-    private readonly DataContext _dbContext;
     private readonly IProductService _productService;
 
-    public ProductsController(ILogger<ProductsController> logger, DataContext dbContext, IProductService productService)
+    public ProductsController(ILogger<ProductsController> logger, IProductService productService)
     {
         _logger = logger;
-        _dbContext = dbContext;
         _productService = productService;
     }
     
