@@ -21,7 +21,8 @@ public class Program
         builder.Services.AddSwaggerGen();
         
         builder.Services.AddDbContext<DataContext>(opt =>
-            opt.UseInMemoryDatabase("TodoApp"));
+            opt.UseSqlServer(builder.Configuration["ConnectionStrings:SqlDefaultConnection"])
+            );
 
         var app = builder.Build();
 
