@@ -9,8 +9,6 @@ namespace TodoApp.Controllers;
 [Route("api/[controller]")]
 public class TodoItemsController : ControllerBase
 {
-   
-
     private readonly ILogger<TodoItemsController> _logger;
     private readonly DataContext _dbContext;
     private readonly ITodoItemService _todoItemService;

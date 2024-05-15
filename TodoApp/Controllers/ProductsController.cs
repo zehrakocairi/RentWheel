@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
+using TodoApp.Services;
 
 namespace TodoApp.Controllers;
 
@@ -11,17 +12,20 @@ public class ProductsController:ControllerBase
 {
     private readonly ILogger<ProductsController> _logger;
     private readonly DataContext _dbContext;
+    private readonly IProductService _productService;
 
-    public ProductsController(ILogger<ProductsController> logger, DataContext dbContext)
+    public ProductsController(ILogger<ProductsController> logger, DataContext dbContext, IProductService productService)
     {
         _logger = logger;
         _dbContext = dbContext;
+        _productService = productService;
     }
     
     [HttpGet]
     public IActionResult GetAll()
     {
-        var allProducts = _dbContext.Products.ToList();
+        
+        var allProducts = _productService.GetProducts();
         return Ok(allProducts);
     }
 
@@ -33,9 +37,8 @@ public class ProductsController:ControllerBase
             return BadRequest("No product!");
         }
 
-        _dbContext.Products.Add(item);
+        _productService.Create(item);
         
-        _dbContext.SaveChanges();
         return Ok();
     }
 
@@ -47,32 +50,14 @@ public class ProductsController:ControllerBase
             return BadRequest("No product to be updated!");
         }
 
-        var existingProduct = _dbContext.Products.Where(p => p.Id == item.Id).FirstOrDefault();
-
-        if (existingProduct==null)
-        {
-            return BadRequest($"There is no record with that Id : {item.Id}");
-        }
-
-        existingProduct.LikeCount = item.LikeCount;
-
-        _dbContext.SaveChanges();
-
+        _productService.Update(item);
         return Ok(); 
     }
 
     [HttpDelete]
     public IActionResult DeleteProduct(long Id)
     {
-        var productToDelete = _dbContext.Products.Where(p => p.Id == Id).FirstOrDefault();
-        if (productToDelete==null)
-        {
-           return NotFound();
-        }
-
-        _dbContext.Products.Remove(productToDelete);
-        _dbContext.SaveChanges();
-
+        _productService.Delete(Id);
         return Ok();
     }
 }
