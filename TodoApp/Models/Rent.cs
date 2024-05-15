@@ -8,11 +8,11 @@ public class Rent:BaseEntity
     
     public Boolean DayPrice { get; set; }
 
-    public int ClientId { get; set; }
+    public long ClientId { get; set; }
     
-    public int CarId { get; set; }
+    public long CarId { get; set; }
     
-    public Client Car { get; set; }
+    public Car Car { get; set; }
     public Client Client { get; set; }
 
 }

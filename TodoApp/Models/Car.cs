@@ -12,7 +12,7 @@ public class Car : BaseEntity
     
     public Boolean IsAvailable { get; set; }
 
-    public int CompanyId { get; set; }
+    public long CompanyId { get; set; }
     
     [ForeignKey("CompanyId")]
     public Company Company { get; set; }
