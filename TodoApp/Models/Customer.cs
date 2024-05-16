@@ -1,6 +1,6 @@
 namespace TodoApp.Models;
 
-public class Client:BaseEntity
+public class Customer:BaseEntity
 {
     public string Name { get; set; }
     
