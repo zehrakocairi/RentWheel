@@ -10,14 +10,10 @@ public class DataContext : DbContext
     }
 
     public DbSet<TodoItem> TodoItems { get; set; } = null!;
-    
     public DbSet<Product> Products { get; set; } = null!;
-
     public DbSet<Company> Companies { get; set; }= null!;
-
     public DbSet<Car> Cars { get; set; }= null!;
-
-    public DbSet<Customer> Clients { get; set; }= null!;
+    public DbSet<Customer> Customers { get; set; }= null!;
 
     public DbSet<Rent> Rents { get; set; }= null!;
 }
