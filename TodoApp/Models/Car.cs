@@ -12,6 +12,8 @@ public class Car : BaseEntity
     
     public Boolean IsAvailable { get; set; }
 
+    public double DailyPrice { get; set; }
+
     public long CompanyId { get; set; }
     
     [ForeignKey("CompanyId")]

@@ -6,7 +6,7 @@ public class Rent:BaseEntity
     
     public DateTime EndDate { get; set; }
     
-    public Boolean DayPrice { get; set; }
+    public double TotalPrice { get; set; }
 
     public long CustomerId { get; set; }
     

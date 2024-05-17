@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoApp.Models;
 using TodoApp.Services;
+using TodoApp.Dtos;
+
 
 namespace TodoApp.Controllers;
 
@@ -9,23 +11,36 @@ namespace TodoApp.Controllers;
 
 public class RentController:ControllerBase
 {
-    private readonly ILogger<RentController> _logger;
     private readonly IRentService _rentService;
     
-    public RentController(ILogger<RentController> logger, IRentService rentService)
+    public RentController( IRentService rentService)
     {
-        _logger = logger;
         _rentService = rentService;
     }
-    
-    public IActionResult UpdateRent(Rent item)
+
+    [HttpPost("start-rental")]
+    public IActionResult StartRental([FromBody]StartRentalDto dto)
     {
-        if (item == null || item.Id < 1)
+        _rentService.StartRental(dto);
+        return Ok();
+    }
+    
+    [HttpGet("{id}/end-rental")]
+    public IActionResult EndRental([FromRoute]int id)
+    {
+        _rentService.EndRental(id);
+        return Ok();
+    }
+
+    [HttpPut("{rentId}/update-end-date")]
+    public IActionResult UpdateRent([FromRoute]int rentId, [FromQuery]DateTime newEndDate)
+    {
+        if (rentId< 1)
         {
             return BadRequest();
         }
 
-        _rentService.Update(item);
+        _rentService.UpdateRentEndDate(rentId, newEndDate);
         
         return Ok();
     }

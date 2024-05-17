@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using TodoApp.Dtos;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
 
@@ -5,14 +7,14 @@ namespace TodoApp.Services;
 
 public interface IRentService
 {
-    public DateTime StartDate();
-    public DateTime End(Rent item);
-    public void Update(Rent item);
+    public Task StartRental(StartRentalDto dto);
+    public Task EndRental(int rentId);
+    public Task UpdateRentEndDate(int rentId ,DateTime dateToEndRental);
     public void Delete(long id);
     public IEnumerable<Rent> Search();
 }
 
-public class RentService():IRentService
+public class RentService:IRentService
 {
     private readonly DataContext _dbContext;
     
@@ -20,27 +22,62 @@ public class RentService():IRentService
     {
         _dbContext = dbContext;
     }
-    public DateTime StartDate()
+    
+    public async Task StartRental(StartRentalDto dto)
     {
-        throw new NotImplementedException();
-    }
-
-    public DateTime End(Rent item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Update(Rent item)
-    {
-        var currentItem = _dbContext.Rents.Where(x => x.Id == item.Id).FirstOrDefault();
-        if (currentItem == null)
+        var car = _dbContext.Cars.FirstOrDefault(x => x.Id == dto.CarId);
+        if (car == null)
         {
-            throw new Exception($"There is no record with that Id : {item.Id}");
+            throw new Exception($"Car couldn't be found with id: {dto.CarId}");
         }
 
-        currentItem.DayPrice = item.DayPrice;
+        var now = DateTime.UtcNow;
+        var rental = new Rent
+        {
+            CustomerId = dto.CustomerId,
+            CarId = dto.CarId,
+            TotalPrice = dto.DurationInDays * car.DailyPrice,
+            StartDate = now,
+            EndDate = now.AddDays(dto.DurationInDays),
+        };
         
-        _dbContext.SaveChanges();
+        _dbContext.Rents.Add(rental);
+        car.IsAvailable = false;
+        
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task EndRental(int rentId)
+    {
+        var rent = _dbContext.Rents.Include(x=>x.Car).FirstOrDefault(x => x.Id == rentId);
+        if (rent == null)
+        {
+            throw new Exception($"Rent couldn't be found with id: {rentId}");
+        }
+        
+        if (rent.Car == null)
+        {
+            throw new Exception($"Car couldn't be found with id: {rent.Car.Id}");
+        }
+
+        rent.EndDate = DateTime.UtcNow;
+       
+        rent.Car.IsAvailable = true;
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateRentEndDate(int rentId ,DateTime dateToEndRental)
+    {
+        var rent = _dbContext.Rents.Where(x => x.Id == rentId).FirstOrDefault();
+        if (rent == null)
+        {
+            throw new Exception($"There is no record with that Id : {rentId}");
+        }
+
+        rent.EndDate = dateToEndRental;
+        
+        _dbContext.SaveChangesAsync();
     }
 
     public void Delete(long id)

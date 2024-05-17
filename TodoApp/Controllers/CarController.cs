@@ -26,7 +26,7 @@ public class CarController:ControllerBase
     }
     
     [HttpPost]
-    public IActionResult CreateCompany(Car item)
+    public IActionResult CreateCar(Car item)
     {
         if (item == null)
         {
@@ -37,7 +37,7 @@ public class CarController:ControllerBase
     }
     
     [HttpPut]
-    public IActionResult UpdateCompany(Car item)
+    public IActionResult UpdateCar(Car item)
     {
         if (item == null || item.Id < 1)
         {
@@ -50,7 +50,7 @@ public class CarController:ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult DeleteCompany(long id)
+    public IActionResult DeleteCar(long id)
     {
         if (id < 1)
         {

@@ -45,6 +45,7 @@ public class CarService:ICarService
         currentItem.Model = item.Brand;
         currentItem.ModelYear = item.ModelYear;
         currentItem.IsAvailable = item.IsAvailable;
+        currentItem.DailyPrice = item.DailyPrice;
         currentItem.CompanyId = item.CompanyId;
         
         _dbContext.SaveChanges();
