@@ -25,7 +25,7 @@ public class RentService:IRentService
     
     public async Task StartRental(StartRentalDto dto)
     {
-        var car = _dbContext.Cars.FirstOrDefault(x => x.Id == dto.CarId);
+        var car = await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == dto.CarId);
         if (car == null)
         {
             throw new Exception($"Car couldn't be found with id: {dto.CarId}");
@@ -49,7 +49,7 @@ public class RentService:IRentService
 
     public async Task EndRental(int rentId)
     {
-        var rent = _dbContext.Rents.Include(x=>x.Car).FirstOrDefault(x => x.Id == rentId);
+        var rent = await _dbContext.Rents.Include(x=>x.Car).FirstOrDefaultAsync(x => x.Id == rentId);
         if (rent == null)
         {
             throw new Exception($"Rent couldn't be found with id: {rentId}");
@@ -69,7 +69,7 @@ public class RentService:IRentService
 
     public async Task UpdateRentEndDate(int rentId ,DateTime dateToEndRental)
     {
-        var rent = _dbContext.Rents.Where(x => x.Id == rentId).FirstOrDefault();
+        var rent = await _dbContext.Rents.Where(x => x.Id == rentId).FirstOrDefaultAsync();
         if (rent == null)
         {
             throw new Exception($"There is no record with that Id : {rentId}");
@@ -77,7 +77,7 @@ public class RentService:IRentService
 
         rent.EndDate = dateToEndRental;
         
-        _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public void Delete(long id)
