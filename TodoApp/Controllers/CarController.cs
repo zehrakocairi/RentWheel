@@ -7,7 +7,7 @@ namespace TodoApp.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class CarController:ControllerBase
+public class CarController : ControllerBase
 {
     private readonly ILogger<CarController> _logger;
     private readonly ICarService _carService;
