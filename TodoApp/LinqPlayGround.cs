@@ -89,5 +89,18 @@ public class PlayGround
        var coursesIncludingStudents = courses.AsQueryable().Include(x => x.CourseStudents).ToList(); // course.Students are full now
 
     }
-    
+
+    private void NullableSample()
+    {
+        var x = 12;
+        int y = 12;
+        int? z = 12;
+        //y = null; // cannot assign
+        z = null;
+        int? k = 3;
+        k = z;
+        y = z.HasValue ? z.Value : 0;
+        y = z.GetValueOrDefault(0);
+    }
+
 }
