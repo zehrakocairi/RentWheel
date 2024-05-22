@@ -13,7 +13,7 @@ public class RentController:ControllerBase
 {
     private readonly IRentService _rentService;
     
-    public RentController( IRentService rentService)
+    public RentController(IRentService rentService)
     {
         _rentService = rentService;
     }

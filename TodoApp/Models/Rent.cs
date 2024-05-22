@@ -12,7 +12,9 @@ public class Rent:BaseEntity
     
     public long CarId { get; set; }
     
+    public long EmployeeId { get; set; }
     public Car Car { get; set; }
+    
     public Customer Customer { get; set; }
 
 }

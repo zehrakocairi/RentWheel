@@ -31,20 +31,24 @@ public class RentService:IRentService
             throw new Exception($"Car couldn't be found with id: {dto.CarId}");
         }
 
-        var now = DateTime.UtcNow;
-        var rental = new Rent
+        if (car.IsAvailable == true)
         {
-            CustomerId = dto.CustomerId,
-            CarId = dto.CarId,
-            TotalPrice = dto.DurationInDays * car.DailyPrice,
-            StartDate = now,
-            EndDate = now.AddDays(dto.DurationInDays),
-        };
+            var now = DateTime.UtcNow;
+            var rental = new Rent
+            {
+                CustomerId = dto.CustomerId,
+                CarId = dto.CarId,
+                TotalPrice = dto.DurationInDays * car.DailyPrice,
+                StartDate = now,
+                EndDate = now.AddDays(dto.DurationInDays),
+            };
         
-        _dbContext.Rents.Add(rental);
-        car.IsAvailable = false;
+            _dbContext.Rents.Add(rental);
+            car.IsAvailable = false;
         
-        await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
+        }
+        
     }
 
     public async Task EndRental(int rentId)
