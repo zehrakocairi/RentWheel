@@ -17,6 +17,7 @@ public class Program
         builder.Services.AddTransient<ICarService, CarService>();
         builder.Services.AddTransient<ICustomerService, CustomerService>();
         builder.Services.AddTransient<IRentService, RentService>();
+        builder.Services.AddTransient<IEmployeeService, EmployeeService>();
         
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
