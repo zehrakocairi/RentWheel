@@ -27,33 +27,45 @@ public class EmployeeController: ControllerBase
         return Ok(allItems);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> CreateEmployee(CreateEmployeeDto dto)
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<IActionResult> GetEmployee([FromRoute]long id)
     {
-        if (dto == null)
-        {
-            return BadRequest();
-        }
+        var employee = await _employeeService.GetEmployee(id);
 
-       await _employeeService.CreateEmployee(dto);
-        return Ok();
+        return Ok(employee);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateEmployee([FromBody]CreateEmployeeDto dto)
+    { 
+      var createdEmployee = await _employeeService.CreateEmployee(dto);
+       return Ok(createdEmployee);
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateEmployee(Employee item)
+    [Route("{id}")]
+    public async Task<IActionResult> UpdateEmployee([FromRoute]long id, [FromBody]Employee item)
     {
-        if (item == null || item.Id < 1)
+        if (item.Id != id)
         {
-            return BadRequest();
+            return BadRequest("The ID in the route does not match the ID in the model.");
         }
 
-      await _employeeService.UpdateEmployee(item);
+        if (item.Id < 1)
+        {
+            return BadRequest("Invalid ID.");
+        }
         
-        return Ok();
+        await _employeeService.UpdateEmployee(item);
+        var updatedEmployee = await _employeeService.GetEmployee(id);
+        
+         return Ok(updatedEmployee);
     }
 
     [HttpDelete]
-    public IActionResult DeleteEmployee(long id)
+    [Route("{id}")]
+    public IActionResult DeleteEmployee([FromRoute]long id)
     {
         if (id < 1)
         {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Dtos;
 using TodoApp.Infrastructure;
@@ -9,7 +10,9 @@ public interface IEmployeeService
 {
     public Task<IEnumerable<Employee>> GetEmployees();
 
-    public Task CreateEmployee(CreateEmployeeDto dto);
+    public Task<Employee?> GetEmployee(long id);
+
+    public Task<Employee?> CreateEmployee(CreateEmployeeDto dto);
 
     public Task UpdateEmployee(Employee item);
 
@@ -28,16 +31,29 @@ public class EmployeeService : IEmployeeService
     
     public async Task<IEnumerable<Employee>> GetEmployees()
     {
-      return await (_dbContext.Employees.Include(x=>x.Companies).ToListAsync());
+        return await _dbContext.Employees.Include(x=>x.Company).ToListAsync();
     }
-    
-    public async Task CreateEmployee(CreateEmployeeDto dto)
+
+    public async Task<Employee?> GetEmployee(long id)
     {
+        return await _dbContext.Employees.Where(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<Employee?> CreateEmployee(CreateEmployeeDto dto)
+    {
+        var isCompanyExist = await _dbContext.Companies.Where(c => c.Id == dto.CompanyId).AnyAsync();
+        
+        if (!isCompanyExist)
+        {
+            throw new Exception($"There is no company with that Id : {dto.CompanyId}");
+        }
+
         var newEmployee = new Employee(dto);
         
-        _dbContext.Employees.AddAsync(newEmployee);
-        _dbContext.SaveChangesAsync();
+      await  _dbContext.Employees.AddAsync(newEmployee);
+      await _dbContext.SaveChangesAsync();
 
+      return newEmployee;
     }
     
     public async Task UpdateEmployee(Employee item)
@@ -51,8 +67,16 @@ public class EmployeeService : IEmployeeService
 
         employeeToUpdate.Name = item.Name;
         employeeToUpdate.LastName = item.LastName;
+        
+        var isCompanyExist = await _dbContext.Companies.Where(c => c.Id == item.CompanyId).AnyAsync();
+        if (!isCompanyExist)
+        {
+            throw new Exception($"There is no company with that Id : {item.Id}");
+        }
+        
+        employeeToUpdate.CompanyId = item.CompanyId;
 
-        _dbContext.SaveChangesAsync();
+       await _dbContext.SaveChangesAsync();
 
     }
 
