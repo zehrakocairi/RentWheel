@@ -6,13 +6,16 @@ public class Rent:BaseEntity
     
     public DateTime EndDate { get; set; }
     
-    public Boolean DayPrice { get; set; }
+    public double TotalPrice { get; set; }
 
-    public long ClientId { get; set; }
+    public long CustomerId { get; set; }
     
     public long CarId { get; set; }
     
+    public long EmployeeId { get; set; }
+    public IEnumerable<Employee> Employees { get; set; }
     public Car Car { get; set; }
-    public Client Client { get; set; }
+    
+    public Customer Customer { get; set; }
 
 }
