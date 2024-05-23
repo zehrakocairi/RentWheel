@@ -4,6 +4,10 @@ namespace TodoApp.Models;
 
 public class Employee: BaseEntity
 {
+    public Employee()
+    {
+        
+    }
     public Employee(CreateEmployeeDto dto)
     {
         Name = dto.Name;

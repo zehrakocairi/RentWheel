@@ -4,3 +4,5 @@ TodoApp/obj/
 TodoApp/bin/
 
 TodoApp/appsettings.Development.json
+
+.idea/.idea.TodoApp/.idea/
