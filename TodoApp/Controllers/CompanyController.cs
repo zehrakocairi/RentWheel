@@ -19,9 +19,9 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAllCompanies()
+    public async Task<IActionResult> GetAllCompanies()
     {
-        var allItems = _companyService.GetCompanies();
+        var allItems =await _companyService.GetCompanies();
         return Ok(allItems);
     }
     

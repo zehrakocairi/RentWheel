@@ -6,5 +6,4 @@ public class CreateCompanyDto
     
     public string Address { get; set; }
     
-    public string CompanyName { get; set; }
 }

@@ -7,7 +7,7 @@ namespace TodoApp.Services;
 
 public interface ICompanyService
 {
-    public IEnumerable<Company> GetCompanies();
+    public Task<IEnumerable<CompanyDto>>  GetCompanies();
     public void Create(CreateCompanyDto dto);
     public void Update(Company item);
     public void Delete(long id);
@@ -21,9 +21,26 @@ public class CompanyService : ICompanyService
     {
         _dbContext = dbContext;
     }
-    public IEnumerable<Company> GetCompanies()
+    public async Task<IEnumerable<CompanyDto>> GetCompanies()
     {
-        return _dbContext.Companies.Include(x=>x.Cars).ToList();
+        var allCompanies= await _dbContext.Companies.Include(x=>x.Cars).Select(x=> new CompanyDto()
+        {
+            Name = x.Name,
+            Address = x.Address,
+            CompanyCars = x.Cars.Select(c => new CarDto()
+            {
+                Id = c.Id,
+                IsAvailable = c.IsAvailable,
+                Brand = c.Brand,
+                Model = c.Model,
+                DailyPrice = c.DailyPrice,
+                CompanyName = c.Company.Name,
+                ModelYear = c.ModelYear
+            }).ToList(),
+            CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id.ToString())
+        }).ToListAsync();
+
+        return allCompanies;
     }
 
     public void Create(CreateCompanyDto dto)
