@@ -17,6 +17,21 @@ public class RentController:ControllerBase
     {
         _rentService = rentService;
     }
+    
+    
+
+    [HttpGet("{id}")]
+    public IActionResult GetSingleRental([FromRoute]long id)
+    {
+        // TODO : COmplete here
+        return Ok();
+    }
+    
+    [HttpGet("employee-rentals")]
+    public async Task<IActionResult> GetEmployeeRentals([FromQuery]long empoloyeeId)
+    { 
+        return Ok(await _rentService.GetEmployeesRental(empoloyeeId));
+    }
 
     [HttpPost("start-rental")]
     public IActionResult StartRental([FromBody]StartRentalDto dto)

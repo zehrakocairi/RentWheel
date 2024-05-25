@@ -13,5 +13,8 @@ public class CreateEmployeeDto
     public string LastName { get; set; }
     
     [Required] 
+    public string CompanyName { get; set; }
+    
+    [Required] 
     public long CompanyId { get; set; }
 }

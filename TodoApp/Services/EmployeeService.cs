@@ -8,9 +8,9 @@ namespace TodoApp.Services;
 
 public interface IEmployeeService
 {
-    public Task<IEnumerable<Employee>> GetEmployees();
+    public Task<IEnumerable<EmployeeDto>> GetEmployees();
 
-    public Task<Employee?> GetEmployee(long id);
+    public Task<EmployeeDto?> GetEmployee(long id);
 
     public Task<Employee?> CreateEmployee(CreateEmployeeDto dto);
 
@@ -24,19 +24,42 @@ public class EmployeeService : IEmployeeService
 {
     private readonly DataContext _dbContext;
 
-    public EmployeeService(DataContext dbContex)
+    public EmployeeService(DataContext dbContext)
     {
-        _dbContext = dbContex; 
+        _dbContext = dbContext; 
     }
     
-    public async Task<IEnumerable<Employee>> GetEmployees()
+    public async Task<IEnumerable<EmployeeDto>> GetEmployees()
     {
-        return await _dbContext.Employees.Include(x=>x.Company).ToListAsync();
+        var allEmployees = await _dbContext.Employees
+            .Include(x => x.CompanyName)
+            .Select(e => new EmployeeDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                LastName = e.LastName,
+                CompanyName = e.CompanyName
+            })
+            .ToListAsync();
+        
+        return allEmployees;
     }
 
-    public async Task<Employee?> GetEmployee(long id)
+    public async Task<EmployeeDto?> GetEmployee(long id)
     {
-        return await _dbContext.Employees.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var employee = await _dbContext.Employees
+            .Include(x => x.CompanyName)
+            .Where(x => x.Id == id)
+            .Select(e => new EmployeeDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                LastName = e.LastName,
+                CompanyName = e.CompanyName
+            })
+            .FirstOrDefaultAsync();
+
+        return employee;
     }
 
     public async Task<Employee?> CreateEmployee(CreateEmployeeDto dto)
