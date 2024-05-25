@@ -1,11 +1,15 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TodoApp.Dtos;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
 
 namespace TodoApp.Services;
 
 public interface ICarService
-{
-    public IEnumerable<Car> GetCars();
+{ 
+    public  Task<CarDto> GetSingleCar(long id); 
+    public Task<IEnumerable<CarDto>> GetCars();
     public void Create(Car item);
     public void Update(Car item);
     public void Delete(long id);
@@ -20,10 +24,37 @@ public class CarService:ICarService
     {
         _dbContext = dbContext;
     }
-    
-    public IEnumerable<Car> GetCars()
+
+    public async Task<CarDto> GetSingleCar([FromRoute]long id)
     {
-        return _dbContext.Cars.ToList();
+        var car = await _dbContext.Cars.Where(c => c.Id == id).Select(c=>new CarDto
+        {
+            Id = c.Id,
+            Brand = c.Brand,
+            Model = c.Model,
+            ModelYear = c.ModelYear,
+            IsAvailable = c.IsAvailable,
+            DailyPrice = c.DailyPrice,
+            CompanyName = c.Company.Name,
+            
+        }).FirstOrDefaultAsync();
+        
+        return car;
+    }
+    public async Task<IEnumerable<CarDto>> GetCars()
+    {
+        var cars = await _dbContext.Cars.Select(c => new CarDto
+        {
+            Id = c.Id,
+            Brand = c.Brand,
+            Model = c.Model,
+            ModelYear = c.ModelYear,
+            IsAvailable = c.IsAvailable,
+            DailyPrice = c.DailyPrice,
+            CompanyName = c.Company.Name,
+        }).ToListAsync();
+
+        return cars;
     }
 
     public void Create(Car item)

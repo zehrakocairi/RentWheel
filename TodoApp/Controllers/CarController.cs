@@ -17,11 +17,18 @@ public class CarController : ControllerBase
         _logger = logger;
         _carService = companyService;
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCarById(long id)
+    {
+        var car = await _carService.GetSingleCar(id);
+        return Ok(car);
+    }
 
     [HttpGet]
-    public IActionResult GetAllCars()
+    public async Task<IActionResult>  GetAllCars()
     {
-        var allCars = _carService.GetCars();
+        var allCars = await _carService.GetCars();
         return Ok(allCars);
     }
     

@@ -7,7 +7,7 @@ namespace TodoApp.Services;
 
 public interface IRentService
 {
-    Task<RentDto> GetSingleRental(long id);
+    public Task<RentDto> GetSingleRental(long id);
     Task<IEnumerable<RentDto>> GetEmployeesRental(long employeeId);
     public Task StartRental(StartRentalDto dto);
     public Task EndRental(int rentId);
