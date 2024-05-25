@@ -8,6 +8,8 @@ namespace TodoApp.Services;
 public interface ICompanyService
 {
     public Task<IEnumerable<CompanyDto>>  GetCompanies();
+
+    public Task<CompanyDto> GetCompany(long id);
     public void Create(CreateCompanyDto dto);
     public void Update(Company item);
     public void Delete(long id);
@@ -20,6 +22,29 @@ public class CompanyService : ICompanyService
     public CompanyService(DataContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<CompanyDto> GetCompany(long id)
+    {
+        var company = await _dbContext.Companies.Where(x => x.Id == id).Include(x => x.Cars).Select(x =>
+            new CompanyDto()
+            {
+                Name = x.Name,
+                Address = x.Address,
+                CompanyCars = x.Cars.Select(c => new CarDto()
+                {
+                    Id = c.Id,
+                    IsAvailable = c.IsAvailable,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    DailyPrice = c.DailyPrice,
+                    CompanyName = c.Company.Name,
+                    ModelYear = c.ModelYear
+                }).ToList(),
+                CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id)
+            }).FirstOrDefaultAsync();
+        
+        return company;
     }
     public async Task<IEnumerable<CompanyDto>> GetCompanies()
     {
@@ -37,7 +62,7 @@ public class CompanyService : ICompanyService
                 CompanyName = c.Company.Name,
                 ModelYear = c.ModelYear
             }).ToList(),
-            CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id.ToString())
+            CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id)
         }).ToListAsync();
 
         return allCompanies;

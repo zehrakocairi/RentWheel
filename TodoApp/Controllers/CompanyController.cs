@@ -19,10 +19,17 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetSingleCompany([FromRoute]long id)
+    {
+        var company =await _companyService.GetCompany(id);
+        return Ok(company);
+    }
+    
+    [HttpGet]
     public async Task<IActionResult> GetAllCompanies()
     {
-        var allItems =await _companyService.GetCompanies();
-        return Ok(allItems);
+        var allCompanies =await _companyService.GetCompanies();
+        return Ok(allCompanies);
     }
     
     [HttpPost]
