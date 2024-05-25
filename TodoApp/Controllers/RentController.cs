@@ -17,14 +17,11 @@ public class RentController:ControllerBase
     {
         _rentService = rentService;
     }
-    
-    
 
     [HttpGet("{id}")]
-    public IActionResult GetSingleRental([FromRoute]long id)
+    public  async Task<IActionResult> GetSingleRental([FromRoute]long id)
     {
-        // TODO : COmplete here
-        return Ok();
+        return Ok(await _rentService.GetSingleRental(id));
     }
     
     [HttpGet("employee-rentals")]

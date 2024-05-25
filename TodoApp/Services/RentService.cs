@@ -8,7 +8,7 @@ namespace TodoApp.Services;
 public interface IRentService
 {
     public Task<RentDto> GetSingleRental(long id);
-    Task<IEnumerable<RentDto>> GetEmployeesRental(long employeeId);
+    public Task<IEnumerable<RentDto>> GetEmployeesRental(long employeeId);
     public Task StartRental(StartRentalDto dto);
     public Task EndRental(int rentId);
     public Task UpdateRentEndDate(int rentId ,DateTime dateToEndRental);
@@ -27,9 +27,31 @@ public class RentService:IRentService
 
     public async Task<RentDto> GetSingleRental(long id)
     {
-        throw new NotImplementedException();
+        var rental = await _dbContext.Rents
+            .Include(x => x.Car.Company)
+            .Where(x => x.Id == id)
+            .Select(x => new RentDto()
+            {
+                Id = x.Id,
+                StartDate = x.StartDate,
+                TotalPrice = x.TotalPrice,
+                EndDate = x.EndDate,
+                Car = new CarDto()
+                {
+                    Id = x.Car.Id,
+                    IsAvailable = x.Car.IsAvailable,
+                    Brand = x.Car.Brand,
+                    Model = x.Car.Model,
+                    DailyPrice = x.Car.DailyPrice,
+                    CompanyName = x.Car.Company.Name,
+                    ModelYear = x.Car.ModelYear
+                }
+            })
+            .FirstOrDefaultAsync();
+
+        return rental;
     }
-    
+
     public async Task<IEnumerable<RentDto>> GetEmployeesRental(long employeeId)
     {
         var rentals = await _dbContext.Rents
