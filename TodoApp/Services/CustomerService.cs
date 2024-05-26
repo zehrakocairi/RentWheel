@@ -9,7 +9,7 @@ public interface ICustomerService
 {
     public Task<CustomerDto> GetSingleCustomer(long id);
     public Task<IEnumerable<CustomerDto>> GetCustomers();
-    public void Create(Customer item);
+    public void Create(CreateCustomerDto dto);
     public void Update(Customer item);
     public void Delete(long id);
 
@@ -111,9 +111,10 @@ public class CustomerService:ICustomerService
 
         return allCustomers;
     }
-    public void Create(Customer item)
+    public void Create(CreateCustomerDto dto)
     {
-        _dbContext.Customers.Add(item);
+        var customerToCreate = new Customer(dto);
+        _dbContext.Customers.Add(customerToCreate);
         
         _dbContext.SaveChanges();
     }
