@@ -13,7 +13,6 @@ public interface ICompanyService
     public void Update(Company item);
     public void Delete(long id);
 }
-
 public class CompanyService : ICompanyService
 {
     private readonly DataContext _dbContext;

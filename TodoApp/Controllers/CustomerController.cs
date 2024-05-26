@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Dtos;
 using TodoApp.Models;
 using TodoApp.Services;
 
@@ -33,13 +34,13 @@ public class CustomerController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult CreateCustomer(Customer item)
+    public IActionResult CreateCustomer(CreateCustomerDto dto)
     {
-        if (item == null)
+        if (dto == null)
         {
             return BadRequest();
         }
-        _customerService.Create(item);
+        _customerService.Create(dto);
         return Ok();
     }
     
