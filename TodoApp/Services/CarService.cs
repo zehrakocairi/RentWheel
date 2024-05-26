@@ -10,7 +10,7 @@ public interface ICarService
 { 
     public  Task<CarDto> GetSingleCar(long id); 
     public Task<IEnumerable<CarDto>> GetCars();
-    public void Create(Car item);
+    public void Create(CreateCarDto dto);
     public void Update(Car item);
     public void Delete(long id);
     
@@ -57,9 +57,11 @@ public class CarService:ICarService
         return cars;
     }
 
-    public void Create(Car item)
+    public void Create(CreateCarDto dto)
     {
-        _dbContext.Cars.Add(item);
+        var newCar = new Car(dto); 
+        
+        _dbContext.Cars.Add(newCar);
         
         _dbContext.SaveChanges();
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Dtos;
 using TodoApp.Models;
 using TodoApp.Services;
 
@@ -33,13 +34,13 @@ public class CarController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult CreateCar(Car item)
+    public IActionResult CreateCar(CreateCarDto dto)
     {
-        if (item == null)
+        if (dto == null)
         {
             return BadRequest();
         }
-        _carService.Create(item);
+        _carService.Create(dto);
         return Ok();
     }
     

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TodoApp.Dtos;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
 using TodoApp.Services;
@@ -28,14 +29,14 @@ public class ProductsController:ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateProduct(Product item)
+    public IActionResult CreateProduct(CreateProductDto dto)
     {
-        if (item == null)
+        if (dto == null)
         {
             return BadRequest("No product!");
         }
 
-        _productService.Create(item);
+        _productService.Create(dto);
         
         return Ok();
     }

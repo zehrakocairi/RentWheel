@@ -1,3 +1,4 @@
+using TodoApp.Dtos;
 using TodoApp.Infrastructure;
 using TodoApp.Models;
 
@@ -6,7 +7,7 @@ public interface IProductService
 {
     public IEnumerable<Product> GetProducts();
 
-    public void Create(Product product);
+    public void Create(CreateProductDto dto);
 
     public void Update(Product product);
 
@@ -24,9 +25,10 @@ public class ProductService:IProductService
     {
         return _dbContext.Products.ToList();
     }
-    public void Create(Product product)
+    public void Create(CreateProductDto dto)
     {
-        _dbContext.Products.Add(product);
+        var productToCreate = new Product(dto);
+        _dbContext.Products.Add(productToCreate);
         
         _dbContext.SaveChanges();
     }
