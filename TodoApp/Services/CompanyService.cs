@@ -6,10 +6,9 @@ using TodoApp.Models;
 namespace TodoApp.Services;
 
 public interface ICompanyService
-{
+{ 
+    public Task<CompanyDto> GetSingleCompany(long id);
     public Task<IEnumerable<CompanyDto>>  GetCompanies();
-
-    public Task<CompanyDto> GetCompany(long id);
     public void Create(CreateCompanyDto dto);
     public void Update(Company item);
     public void Delete(long id);
@@ -24,7 +23,7 @@ public class CompanyService : ICompanyService
         _dbContext = dbContext;
     }
 
-    public async Task<CompanyDto> GetCompany(long id)
+    public async Task<CompanyDto> GetSingleCompany(long id)
     {
         var company = await _dbContext.Companies.Where(x => x.Id == id).Include(x => x.Cars).Select(x =>
             new CompanyDto()
@@ -66,8 +65,7 @@ public class CompanyService : ICompanyService
         }).ToListAsync();
 
         return allCompanies;
-    }
-
+    } 
     public void Create(CreateCompanyDto dto)
     {
         var itemToCreate = new Company(dto);
@@ -75,7 +73,6 @@ public class CompanyService : ICompanyService
         _dbContext.Companies.Add(itemToCreate);
         _dbContext.SaveChanges();
     }
-    
     public void Update(Company item)
     {
         var currentItem = _dbContext.Companies.Where(x => x.Id == item.Id).FirstOrDefault();

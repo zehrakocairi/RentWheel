@@ -19,9 +19,9 @@ public class CompanyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetSingleCompany([FromRoute]long id)
+    public async Task<IActionResult> GetCompanyById([FromRoute]long id)
     {
-        var company =await _companyService.GetCompany(id);
+        var company = await _companyService.GetSingleCompany(id);
         return Ok(company);
     }
     

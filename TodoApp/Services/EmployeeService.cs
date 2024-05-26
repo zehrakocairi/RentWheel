@@ -5,19 +5,13 @@ using TodoApp.Infrastructure;
 using TodoApp.Models;
 
 namespace TodoApp.Services;
-
 public interface IEmployeeService
-{
-    public Task<IEnumerable<EmployeeDto>> GetEmployees();
-
+{ 
     public Task<EmployeeDto?> GetEmployee(long id);
-
+    public Task<IEnumerable<EmployeeDto>> GetEmployees();
     public Task<Employee?> CreateEmployee(CreateEmployeeDto dto);
-
     public Task UpdateEmployee(Employee item);
-
     public void DeleteEmployee(long id);
-    
 }
 
 public class EmployeeService : IEmployeeService
@@ -28,23 +22,6 @@ public class EmployeeService : IEmployeeService
     {
         _dbContext = dbContext; 
     }
-    
-    public async Task<IEnumerable<EmployeeDto>> GetEmployees()
-    {
-        var allEmployees = await _dbContext.Employees
-            .Include(x => x.CompanyName)
-            .Select(e => new EmployeeDto
-            {
-                Id = e.Id,
-                Name = e.Name,
-                LastName = e.LastName,
-                CompanyName = e.CompanyName
-            })
-            .ToListAsync();
-        
-        return allEmployees;
-    }
-
     public async Task<EmployeeDto?> GetEmployee(long id)
     {
         var employee = await _dbContext.Employees
@@ -61,7 +38,21 @@ public class EmployeeService : IEmployeeService
 
         return employee;
     }
-
+    public async Task<IEnumerable<EmployeeDto>> GetEmployees()
+    {
+        var allEmployees = await _dbContext.Employees
+            .Include(x => x.CompanyName)
+            .Select(e => new EmployeeDto
+            {
+                Id = e.Id,
+                Name = e.Name,
+                LastName = e.LastName,
+                CompanyName = e.CompanyName
+            })
+            .ToListAsync();
+        
+        return allEmployees;
+    }
     public async Task<Employee?> CreateEmployee(CreateEmployeeDto dto)
     {
         var isCompanyExist = await _dbContext.Companies.Where(c => c.Id == dto.CompanyId).AnyAsync();
@@ -77,8 +68,7 @@ public class EmployeeService : IEmployeeService
       await _dbContext.SaveChangesAsync();
 
       return newEmployee;
-    }
-    
+    } 
     public async Task UpdateEmployee(Employee item)
     {
         var employeeToUpdate = _dbContext.Employees.Where(x => x.Id == item.Id).FirstOrDefault();
@@ -102,7 +92,6 @@ public class EmployeeService : IEmployeeService
        await _dbContext.SaveChangesAsync();
 
     }
-
     public void DeleteEmployee(long id)
     {
         var itemToDelete = _dbContext.Employees.Where(x=> x.Id == id).FirstOrDefault();

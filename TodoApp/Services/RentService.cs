@@ -4,7 +4,6 @@ using TodoApp.Infrastructure;
 using TodoApp.Models;
 
 namespace TodoApp.Services;
-
 public interface IRentService
 {
     public Task<RentDto> GetSingleRental(long id);
@@ -15,7 +14,6 @@ public interface IRentService
     public void Delete(long id);
     public IEnumerable<Rent> Search();
 }
-
 public class RentService:IRentService
 {
     private readonly DataContext _dbContext;
@@ -24,7 +22,6 @@ public class RentService:IRentService
     {
         _dbContext = dbContext;
     }
-
     public async Task<RentDto> GetSingleRental(long id)
     {
         var rental = await _dbContext.Rents
@@ -51,7 +48,6 @@ public class RentService:IRentService
 
         return rental;
     }
-
     public async Task<IEnumerable<RentDto>> GetEmployeesRental(long employeeId)
     {
         var rentals = await _dbContext.Rents
@@ -77,7 +73,6 @@ public class RentService:IRentService
 
         return rentals;
     }
-
     public async Task StartRental(StartRentalDto dto)
     {
         var car = await _dbContext.Cars.FirstOrDefaultAsync(x => x.Id == dto.CarId);
@@ -103,9 +98,7 @@ public class RentService:IRentService
         
             await _dbContext.SaveChangesAsync();
         }
-        
     }
-
     public async Task EndRental(int rentId)
     {
         var rent = await _dbContext.Rents.Include(x=>x.Car).FirstOrDefaultAsync(x => x.Id == rentId);
@@ -125,7 +118,6 @@ public class RentService:IRentService
 
         await _dbContext.SaveChangesAsync();
     }
-
     public async Task UpdateRentEndDate(int rentId ,DateTime dateToEndRental)
     {
         var rent = await _dbContext.Rents.Where(x => x.Id == rentId).FirstOrDefaultAsync();
@@ -138,7 +130,6 @@ public class RentService:IRentService
         
         await _dbContext.SaveChangesAsync();
     }
-
     public void Delete(long id)
     {
         var itemToDelete = _dbContext.Rents.Where(x=> x.Id == id).FirstOrDefault();
@@ -150,7 +141,7 @@ public class RentService:IRentService
         _dbContext.Rents.Remove(itemToDelete);
         _dbContext.SaveChanges();
     }
-
+    
     public IEnumerable<Rent> Search()
     {
         throw new NotImplementedException();

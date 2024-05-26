@@ -19,7 +19,7 @@ public class RentController:ControllerBase
     }
 
     [HttpGet("{id}")]
-    public  async Task<IActionResult> GetSingleRental([FromRoute]long id)
+    public  async Task<IActionResult> GetRentalById([FromRoute]long id)
     {
         return Ok(await _rentService.GetSingleRental(id));
     }

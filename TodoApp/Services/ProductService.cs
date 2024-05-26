@@ -2,7 +2,6 @@ using TodoApp.Infrastructure;
 using TodoApp.Models;
 
 namespace TodoApp.Services;
-
 public interface IProductService
 {
     public IEnumerable<Product> GetProducts();
@@ -13,7 +12,6 @@ public interface IProductService
 
     public void Delete(long id);
 }
-
 public class ProductService:IProductService
 {
     private readonly DataContext _dbContext;
@@ -22,18 +20,16 @@ public class ProductService:IProductService
     {
         _dbContext = dbContext;
     }
-    public IEnumerable<Product> GetProducts()
+    public IEnumerable<Product> GetProducts() 
     {
         return _dbContext.Products.ToList();
     }
-
     public void Create(Product product)
     {
         _dbContext.Products.Add(product);
         
         _dbContext.SaveChanges();
     }
-
     public void Update(Product product)
     {
         var existingProduct = _dbContext.Products.Where(p => p.Id == product.Id).FirstOrDefault();
@@ -50,7 +46,6 @@ public class ProductService:IProductService
         _dbContext.SaveChanges();
 
     }
-
     public void Delete(long id)
     {
         var productToDelete = _dbContext.Products.Where(p => p.Id == id).FirstOrDefault();

@@ -20,20 +20,20 @@ public class EmployeeController: ControllerBase
     }
     
     [HttpGet]
+    [Route("{id}")]
+    public async Task<IActionResult> GetEmployeeById([FromRoute]long id)
+    {
+        var employee = await _employeeService.GetEmployee(id);
+        
+        return Ok(employee);
+    }
+    
+    [HttpGet]
     public async Task<IActionResult> GetAllEmployees()
     {
         var allItems =await _employeeService.GetEmployees();
         
         return Ok(allItems);
-    }
-    
-    [HttpGet]
-    [Route("{id}")]
-    public async Task<IActionResult> GetEmployee([FromRoute]long id)
-    {
-        var employee = await _employeeService.GetEmployee(id);
-
-        return Ok(employee);
     }
     
     [HttpPost]
@@ -71,7 +71,6 @@ public class EmployeeController: ControllerBase
         {
             return BadRequest();
         }
-        
         _employeeService.DeleteEmployee(id);
 
         return Ok();

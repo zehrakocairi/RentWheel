@@ -16,11 +16,19 @@ public class CustomerController : ControllerBase
         _logger = logger;
         _customerService = customerService;
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCustomerById([FromRoute]long id)
+    {
+        var customer =await _customerService.GetSingleCustomer(id);
+        return Ok(customer);
+    }
+
 
     [HttpGet]
-    public IActionResult GetAllCustomers()
+    public async Task<IActionResult> GetAllCustomers()
     {
-        var allItems = _customerService.GetCustomers();
+        var allItems =await _customerService.GetCustomers();
         return Ok(allItems);
     }
     
