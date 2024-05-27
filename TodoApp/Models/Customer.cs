@@ -19,7 +19,8 @@ public class Customer:BaseEntity
     public string Email { get; set; }
 
     public long CompanyId { get; set; }
-    public IEnumerable<Company> Companies { get; set; }
+    
+    public Company Company { get; set; }
     
     public long RentId { get; set; }
     public IEnumerable<Rent> Rents { get; set; } = new List<Rent>();

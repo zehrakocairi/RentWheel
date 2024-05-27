@@ -24,11 +24,12 @@ public class CompanyService : ICompanyService
 
     public async Task<CompanyDto> GetSingleCompany(long id)
     {
-        var company = await _dbContext.Companies.Where(x => x.Id == id).Include(x => x.Cars).Select(x =>
+        var company = await _dbContext.Companies.Where(x => x.Id == id).Include(x => x.Cars).ThenInclude(c=>c.Company).Include(x=>x.Customers).Select(x =>
             new CompanyDto()
             {
                 Name = x.Name,
                 Address = x.Address,
+                CustomerCount = x.Customers.Count(),
                 CompanyCars = x.Cars.Select(c => new CarDto()
                 {
                     Id = c.Id,
@@ -39,14 +40,15 @@ public class CompanyService : ICompanyService
                     CompanyName = c.Company.Name,
                     ModelYear = c.ModelYear
                 }).ToList(),
-                CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id)
-            }).FirstOrDefaultAsync();
+            }).SingleAsync();
+        
+        company.CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == id);
         
         return company;
     }
     public async Task<IEnumerable<CompanyDto>> GetCompanies()
     {
-        var allCompanies= await _dbContext.Companies.Include(x=>x.Cars).Select(x=> new CompanyDto()
+        var allCompanies= await _dbContext.Companies.Include(x=>x.Cars).ThenInclude(c=>c.Company).Include(x=>x.Customers).Select(x=> new CompanyDto()
         {
             Name = x.Name,
             Address = x.Address,
@@ -60,8 +62,17 @@ public class CompanyService : ICompanyService
                 CompanyName = c.Company.Name,
                 ModelYear = c.ModelYear
             }).ToList(),
-            CustomerCount = _dbContext.Customers.Count(c => c.CompanyId == x.Id)
         }).ToListAsync();
+
+        var countMap = _dbContext.Customers
+            .Select(x=>x.CompanyId)
+            .GroupBy(c => c)
+            .ToDictionary(x => x.Key, x => x.Count());
+
+        foreach (var item in allCompanies)
+        {
+            item.CustomerCount = countMap[item.Id];
+        }
 
         return allCompanies;
     } 

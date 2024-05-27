@@ -27,6 +27,7 @@ public class CarService:ICarService
 
     public async Task<CarDto> GetSingleCar([FromRoute]long id)
     {
+        // TODO : fix here
         var car = await _dbContext.Cars.Where(c => c.Id == id).Select(c=>new CarDto
         {
             Id = c.Id,
@@ -37,12 +38,13 @@ public class CarService:ICarService
             DailyPrice = c.DailyPrice,
             CompanyName = c.Company.Name,
             
-        }).FirstOrDefaultAsync();
+        }).SingleAsync();
         
         return car;
     }
     public async Task<IEnumerable<CarDto>> GetCars()
     {
+        // TODO : fix here
         var cars = await _dbContext.Cars.Select(c => new CarDto
         {
             Id = c.Id,
