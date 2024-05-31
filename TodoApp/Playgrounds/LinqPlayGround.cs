@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApp.Models;
 
-namespace TodoApp;
+namespace TodoApp.Playground;
 
 public class Student
 {
@@ -9,7 +9,10 @@ public class Student
     public string LastName { get; set; }
     public string Class { get; set; }
     public int Income { get; set; }
+    
     public int CourseId { get; set; }
+    
+    public Course Course { get; set; }
 }
 
 
@@ -42,7 +45,7 @@ public class PlayGround
 
        var b = data.Where(x => x.Name.StartsWith("z")).Skip(1).Take(2);
        
-       var onlyNames = data.Where(x => x.Name.EndsWith("z")).Select(x=>  x.Name);
+       var onlyNames = data.Where(x => x.Name.EndsWith("z")).Select(x=> x.Name);
 
        var c = data.Where(x => x.Name.EndsWith("z")).Select(x =>
        {
